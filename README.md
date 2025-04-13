@@ -1,50 +1,49 @@
-# React + TypeScript + Vite
+# 📚 Book Repository
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal book management application built with **React**, designed for practicing web application development.
 
-Currently, two official plugins are available:
+This app allows users to search books via the **Google Books API**, register their favorite books to a local bookshelf, and view them later — all handled within the browser using `localStorage`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- 🔍 **Book Search**
+  - Search books by title or author name
+  - Search results fetched from Google Books API
 
-- Configure the top-level `parserOptions` property like this:
+- ➕ **Book Registration**
+  - Add books to your personal bookshelf from search results
+  - Toggle registration with a single button (Add/Delete)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- 📚 **Bookshelf View**
+  - Display all registered books in a two-column layout
+  - Stored data is persisted using browser's `localStorage`
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- 📦 **No Backend Required**
+  - All data is saved client-side using `localStorage`
+  - Future plans to migrate to a backend API
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- 🔄 **Stateful UI**
+  - React hooks (`useState`, `useEffect`, `useCallback`, `useRef`) used for interactivity and dynamic rendering
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+---
+
+## 🛠️ Tech Stack
+
+| Category        | Technology               |
+|----------------|---------------------------|
+| Language        | TypeScript                |
+| Framework       | React                     |
+| UI Library      | Chakra UI                 |
+| Routing         | React Router              |
+| State Handling  | React Hooks (`useState`, `useEffect`) |
+| Data Storage    | localStorage              |
+| Book API        | Google Books API          |
+| Build Tool      | Vite                      |
+
+---
+
+## 🧱 App Structure
+
+
