@@ -4,7 +4,7 @@ export const getSavedBooks = async () => {
   try {
     const res = await fetch("http://localhost:3000/books");
     const data = await res.json();
-    return data;
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Error fetching saved books:", error);
     return [];
@@ -16,9 +16,26 @@ export const isBookSaved = (book: any, savedBooks: any[]) => {
 }
 
 export const toggleSaveBook = async (book: any, savedBooks: any[], setSavedBooks: React.Dispatch<React.SetStateAction<any[]>>, setRenderToggle: React.Dispatch<React.SetStateAction<boolean>>) => {
+  if (!Array.isArray(savedBooks)) return; 
+
   const exists = savedBooks.some((b: any) => b.id === book.id);
 
+  const formattedBook = {
+    id: book.id,
+    volumeInfo: {
+      title: book.volumeInfo?.title || "",
+      authors: book.volumeInfo?.authors || [],
+      publisher: book.volumeInfo?.publisher || "",
+      description: book.volumeInfo?.description || "",
+      imageLinks: {
+        thumbnail: book.volumeInfo?.imageLinks?.thumbnail || "",
+        smallThumbnail: book.volumeInfo?.imageLinks?.smallThumbnail || "",
+      },
+    },
+  };
+
   let updatedBooks;
+
   try {
   if (exists) {
       await fetch(`http://localhost:3000/books/${book.id}`, {
@@ -31,7 +48,7 @@ export const toggleSaveBook = async (book: any, savedBooks: any[], setSavedBooks
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(book),
+        body: JSON.stringify(formattedBook),
       });
       updatedBooks = [...savedBooks, book];
     }
