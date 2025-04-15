@@ -1,8 +1,8 @@
 # 📚 Book Repository
 
-A personal book management application built with **React**, designed for practicing web application development.
+A personal book management application built with **React**, **Express.js**, and **MongoDB Atlas**, designed for full-stack web development practice.
 
-This app allows users to search books via the **Google Books API**, register their favorite books to a local bookshelf, and view them later — all handled within the browser using `localStorage`.
+Users can search books using the **Google Books API**, save them to their personal bookshelf stored in a **cloud-based MongoDB database**, and browse or delete them later — all through a smooth and responsive UI.
 
 ---
 
@@ -10,40 +10,45 @@ This app allows users to search books via the **Google Books API**, register the
 
 - 🔍 **Book Search**
   - Search books by title or author name
-  - Search results fetched from Google Books API
+  - Data fetched from the Google Books API
+  - Supports infinite scroll for seamless browsing
 
 - ➕ **Book Registration**
-  - Add books to your personal bookshelf from search results
-  - Toggle registration with a single button (Add/Delete)
+  - Add books to your personal bookshelf via API
+  - One-click toggle (Add/Delete)
+  - Automatically saved in a MongoDB collection
 
 - 📚 **Bookshelf View**
-  - Display all registered books in a two-column layout
-  - Stored data is persisted using browser's `localStorage`
+  - View all saved books in a responsive grid layout
+  - Data fetched from the backend API (MongoDB)
 
-- 📦 **No Backend Required**
-  - All data is saved client-side using `localStorage`
-  - Future plans to migrate to a backend API
+- 📝 **Book Detail Page**
+  - View detailed information about each book
+  - Accessible from both search results and saved list
 
-- 🔄 **Stateful UI**
-  - React hooks (`useState`, `useEffect`, `useCallback`, `useRef`) used for interactivity and dynamic rendering
+- 🔁 **Full-stack Architecture**
+  - React frontend interacts with an Express.js backend
+  - Data is stored/retrieved from MongoDB Atlas
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category        | Technology               |
-|----------------|---------------------------|
-| Language        | TypeScript                |
-| Framework       | React                     |
-| UI Library      | Chakra UI                 |
-| Routing         | React Router              |
-| State Handling  | React Hooks (`useState`, `useEffect`) |
-| Data Storage    | localStorage              |
-| Book API        | Google Books API          |
-| Build Tool      | Vite                      |
+| Category        | Technology                     |
+|----------------|---------------------------------|
+| Language        | TypeScript                     |
+| Frontend        | React + Vite                   |
+| UI Library      | Chakra UI                      |
+| Routing         | React Router                   |
+| State Handling  | React Hooks                    |
+| API Integration | Google Books API               |
+| Backend         | Node.js + Express.js           |
+| Database        | MongoDB Atlas (via Mongoose)   |
+| Environment     | .env for secrets & URIs        |
+| Deployment      | Localhost (planned remote deploy) |
 
 ---
 
-## 🧱 App Structure
+## 📂 Project Structure
 
 
