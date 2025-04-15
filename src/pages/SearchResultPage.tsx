@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router";
 import { useState, useEffect, useRef, useCallback } from "react";
 import BookCard from "../components/BookCard";
 import Footer from "../components/Footer";
+import { getSavedBooks, isBookSaved, toggleSaveBook } from "../components/ButtonLogic";
 
 export default function SearchResultPage () {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,7 @@ export default function SearchResultPage () {
   const MAX_RESULTS = 20; 
 
   const [books, setBooks] = useState<any[]>([]);
+  const [savedBooks, setSavedBooks] = useState<any[]>([]);
   const [startIndex, setStartIndex] = useState(0);
   const [hasMoreBooks, setHasMoreBooks] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
@@ -25,6 +27,7 @@ export default function SearchResultPage () {
     setBooks([]);
     setHasMoreBooks(true);
     setShowAlert(false);
+    setSavedBooks([]);
   }, [formattedQuery]);
 
   useEffect(() => {
@@ -62,34 +65,52 @@ export default function SearchResultPage () {
   }, [hasMoreBooks]);
 
   // console.log(books);
-  const [_, setRenderToggle] = useState(false);
-  const STORAGE_KEY = "myBookShelf";
-
-  const getSavedBooks = () => {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  }
-
-  const isBookSaved = (book: any) => {
-    const saved = getSavedBooks();
-    return saved.some((b: any) => b.id === book.id);
-  }
-
-  const toggleSaveBook = (book: any) => {
-    console.log("clicked: ", book);
-    const savedBooks = getSavedBooks();
-    const exists = savedBooks.some((b: any) => b.id === book.id);
-
-    let updatedBooks;
-    if (exists) {
-      updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
-    } else {
-      updatedBooks = [...savedBooks, book];
+  // const [_, setRenderToggle] = useState(false);
+  // const STORAGE_KEY = "myBookShelf";
+  
+  useEffect(() => {
+    const fetchSavedBooks = async () => {
+      const data = await getSavedBooks();
+      setSavedBooks(data);
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBooks));
-    setRenderToggle((prev) => !prev); // Trigger a re-render
-    console.log("updatedBooks: ", updatedBooks);
-  }
+    fetchSavedBooks();
+  }, []);
 
+  // const getSavedBooks = () => {
+  //   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  // }
+
+  // const isBookSaved = (book: any) => {
+  //   const saved = getSavedBooks();
+  //   return saved.some((b: any) => b.id === book.id);
+  // }
+
+  // const toggleSaveBook = async (book: any) => {
+  //   // console.log("clicked: ", book);
+  //   const savedBooks = getSavedBooks();
+  //   const exists = savedBooks.some((b: any) => b.id === book.id);
+
+  //   let updatedBooks;
+  //   if (exists) {
+  //     await fetch(`http://localhost:3000/books/${book.id}`, {
+  //       method: "DELETE",
+  //     });
+  //     updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
+  //   } else {
+  //     await fetch(`http://localhost:3000/books`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(book),
+  //     });
+  //     updatedBooks = [...savedBooks, book];
+  //   }
+  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBooks));
+  //   setRenderToggle((prev) => !prev); // Trigger a re-render
+  //   console.log("updatedBooks: ", updatedBooks);
+  // }
+  const [_, setRenderToggle] = useState(false);
 
   return (
     <>
@@ -113,7 +134,7 @@ export default function SearchResultPage () {
               const isLastBook = index === books.length - 1;
               return (
                 <Box key={index} ref={isLastBook ? lastBookRef : undefined}>
-                  <BookCard volumeInfo={book.volumeInfo} isSaved={isBookSaved(book)} onToggleSave={() => toggleSaveBook(book)} />
+                  <BookCard id={book.id} volumeInfo={book.volumeInfo} isSaved={isBookSaved(book, savedBooks)} onToggleSave={() => toggleSaveBook(book, savedBooks, setSavedBooks, setRenderToggle)} />
                 </Box>
               );
           })}

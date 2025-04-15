@@ -1,6 +1,8 @@
 import { Box, Card, Image, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router";
 
 type BookCardProps = {
+  id: string;
   volumeInfo: {
     title?: string;
     authors?: string[];
@@ -16,12 +18,17 @@ type BookCardProps = {
 }
 
 
-export default function BookCard ({ volumeInfo, isSaved, onToggleSave }: BookCardProps) {
+export default function BookCard ({ id, volumeInfo, isSaved, onToggleSave }: BookCardProps) {
   const { title, authors, publisher, description, imageLinks } = volumeInfo;
   const thumbnail = imageLinks?.thumbnail || imageLinks?.smallThumbnail;
   const authorsList = authors?.join(", ") || "Unknown Author";
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/books/${id}`);
+  }
   return (
-    <Card.Root flexDirection="row" overflow="hidden" width="520px" height="200px" borderRadius="20px" mb="20px">
+    <Card.Root flexDirection="row" overflow="hidden" width="520px" height="200px" borderRadius="20px" mb="20px" onClick={handleCardClick} _hover={{cursor: "pointer", boxShadow: "md"}}>
       {thumbnail && (
         <Box width="115px" height="100%" ml="10px" p="0px 5px" display="flex" justifyContent="center" alignItems="center" >
           <Image src={thumbnail} alt={title} objectFit="contain" width="100%" height="100%"/>
@@ -36,8 +43,8 @@ export default function BookCard ({ volumeInfo, isSaved, onToggleSave }: BookCar
         </Card.Body>
         <Card.Footer pb="5px" pt="5px">
           <Button
+            onClick={(e) => {e.stopPropagation(); onToggleSave?.()}}
             height="4/5"
-            onClick={onToggleSave}
             backgroundColor={isSaved ? "blue" : "red"}>
             {isSaved ? "Delete" : "Save"}
           </Button>
