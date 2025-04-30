@@ -30,6 +30,8 @@ export default function SearchResultPage () {
     setSavedBooks([]);
   }, [formattedQuery]);
 
+
+  //This effect fetches books from the Google Books API when the component mounts or when the startIndex or formattedQuery changes.
   useEffect(() => {
     if (!hasMoreBooks) return;
 
@@ -52,6 +54,7 @@ export default function SearchResultPage () {
     fetchBooks();
   }, [startIndex, formattedQuery]);
 
+  //Observing the last book in the list to trigger loading more books when it comes into view
   const observer = useRef<IntersectionObserver | null>(null);
 
   const lastBookRef = useCallback((node: HTMLDivElement | null) => {
@@ -64,10 +67,6 @@ export default function SearchResultPage () {
     if (node) observer.current.observe(node);
   }, [hasMoreBooks]);
 
-  // console.log(books);
-  // const [_, setRenderToggle] = useState(false);
-  // const STORAGE_KEY = "myBookShelf";
-  
   useEffect(() => {
     const fetchSavedBooks = async () => {
       const data = await getSavedBooks();
@@ -76,40 +75,7 @@ export default function SearchResultPage () {
     fetchSavedBooks();
   }, []);
 
-  // const getSavedBooks = () => {
-  //   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  // }
-
-  // const isBookSaved = (book: any) => {
-  //   const saved = getSavedBooks();
-  //   return saved.some((b: any) => b.id === book.id);
-  // }
-
-  // const toggleSaveBook = async (book: any) => {
-  //   // console.log("clicked: ", book);
-  //   const savedBooks = getSavedBooks();
-  //   const exists = savedBooks.some((b: any) => b.id === book.id);
-
-  //   let updatedBooks;
-  //   if (exists) {
-  //     await fetch(`http://localhost:3000/books/${book.id}`, {
-  //       method: "DELETE",
-  //     });
-  //     updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
-  //   } else {
-  //     await fetch(`http://localhost:3000/books`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(book),
-  //     });
-  //     updatedBooks = [...savedBooks, book];
-  //   }
-  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBooks));
-  //   setRenderToggle((prev) => !prev); // Trigger a re-render
-  //   console.log("updatedBooks: ", updatedBooks);
-  // }
+  //force re-rendering the component to update the saved books state
   const [_, setRenderToggle] = useState(false);
 
   return (
