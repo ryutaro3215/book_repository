@@ -9,22 +9,6 @@ export default function BookListPage () {
   const [savedBooks, setSavedBooks] = useState<any[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const STORAGE_KEY = "myBookShelf";
-
-  // const getSavedBooks = () => {
-  //   try {
-  //     const savedData = localStorage.getItem(STORAGE_KEY);
-  //     if (!savedData) return [];
-  //     return JSON.parse(savedData);
-  //     } catch (error) {
-  //       setShowAlert(true);
-  //     }
-  // } 
-
-  // const isBookSaved = (book: any) => {
-  //   const saved = getSavedBooks();
-  //   return saved.some((b: any) => b.id === book.id);
-  // }
 
   useEffect(() => {
     const fetchSavedBooks = async () => {
@@ -35,32 +19,6 @@ export default function BookListPage () {
     fetchSavedBooks();
   }, []);
 
-  // const toggleSaveBook = async (book: any) => {
-  //   const [_, setRenderToggle] = useState(false);
-  //   // console.log("clicked: ", book);
-  //   const savedBooks = getSavedBooks();
-  //   const exists = savedBooks.some((b: any) => b.id === book.id);
-
-  //   let updatedBooks;
-  //   if (exists) {
-  //     await fetch(`http://localhost:3000/books/${book.id}`, {
-  //       method: "DELETE",
-  //     });
-  //     updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
-  //   } else {
-  //     await fetch(`http://localhost:3000/books`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(book),
-  //     });
-  //     updatedBooks = [...savedBooks, book];
-  //   }
-  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBooks));
-  //   setRenderToggle((prev) => !prev); // Trigger a re-render
-  //   console.log("updatedBooks: ", updatedBooks);
-  // }
   const [_, setRenderToggle] = useState(false);
 
   return (
