@@ -14,7 +14,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 console.log("JWT_SECRET", JWT_SECRET);
 
 app.use(cors({
-  origin: "http://localhost:5174",
+  origin: "http://localhost:5173",
   credentials: true,
 }));
 app.use(express.json());

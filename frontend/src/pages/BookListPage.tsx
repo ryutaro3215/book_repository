@@ -4,11 +4,23 @@ import { useState, useEffect } from "react";
 import BookCard from "../components/BookCard";
 import Footer from "../components/Footer";
 import { getSavedBooks, isBookSaved, toggleSaveBook } from "../components/ButtonLogic";
+import { useAuth } from "../components/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function BookListPage () {
   const [savedBooks, setSavedBooks] = useState<any[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  console.log(user);
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate("/login");
+    }
+  }, [user, isLoading, navigate]);
 
   useEffect(() => {
     const fetchSavedBooks = async () => {
@@ -16,7 +28,11 @@ export default function BookListPage () {
         setSavedBooks(data);
         setLoading(false);
       }
-    fetchSavedBooks();
+      try {
+        fetchSavedBooks();
+      } catch (error) {
+        setShowAlert(true);
+        }
   }, []);
 
   const [_, setRenderToggle] = useState(false);

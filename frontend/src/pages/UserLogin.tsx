@@ -12,7 +12,7 @@ export default function UserLogin() {
   const [userPassword, setUserPassword] = useState("");
   const [errorText, setErrorText] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [userData, setUserData] = useState<any[]>([]);
+  const [usersData, setUserData] = useState<any[]>([]);
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
@@ -42,8 +42,9 @@ export default function UserLogin() {
       return false;
     }
     //check if the email is exists in user data
-    if (userData.some((user) => user.email !== email)) {
-      setErrorText("Email is not registered");
+    const userData = usersData.filter((user) => user.email === email);
+    if (userData.length === 0) {
+      setErrorText("User not found");
       return false;
     }
     return true;
@@ -53,11 +54,6 @@ export default function UserLogin() {
     //check the correct password compared to the registered user
     if (!password) {
       setErrorText("Password cannot be empty");
-      return false;
-    }
-    const user = userData.find((user) => user.email === userEmail);
-    if (!user) {
-      setErrorText("User not found");
       return false;
     }
     return true;

@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("../middleware/verifyToken");
 
 const JWT_SECRETKEY=process.env.JWT_SECRET;
 
@@ -44,6 +45,40 @@ router.post("/register", async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 })
+
+router.patch("/update", verifyToken, async (req, res) => {
+  const userId = req.userId;
+  console.log("userId: ", userId);
+  const { username, email, password } = req.body;
+
+  if (!username && !email && !password) {
+    return res.status(400).json({ message: "No field update" });
+  }
+  if (email) {
+    const existingUser = await User.findOne({ email, _id: { $ne: userId } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+  }
+
+  const updateData  = {}
+  if (username) updateData.username = username;
+  if (email) updateData.email = email;
+  if (password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    updateData.password = hashedPassword;
+  }
+  try {
+    const user = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, select: "-password" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const updatedUser = await User.findById(userId).select("-password");
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}) 
 
 router.get("/", async (_req, res) => {
     try {
@@ -116,5 +151,7 @@ router.get("/me", async (req, res) => {
 router.post("/logout", async (_req, res) => {
   res.clearCookie("token").status(200).json({ message: "Logged out successfully" });
 })
+
+
 
 module.exports = router;

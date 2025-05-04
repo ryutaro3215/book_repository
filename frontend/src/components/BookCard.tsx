@@ -1,5 +1,7 @@
 import { Box, Card, Image, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../components/AuthContext";
+import { useEffect, useState } from "react";
 
 type BookCardProps = {
   id: string;
@@ -19,10 +21,18 @@ type BookCardProps = {
 
 
 export default function BookCard ({ id, volumeInfo, isSaved, onToggleSave }: BookCardProps) {
+  const { user, isLoading } = useAuth();
+  const [isLogin, setIsLogin] = useState(true);
   const { title, authors, publisher, description, imageLinks } = volumeInfo;
   const thumbnail = imageLinks?.thumbnail || imageLinks?.smallThumbnail;
   const authorsList = authors?.join(", ") || "Unknown Author";
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      setIsLogin(false);
+    }
+  }, [user, isLoading]);
 
   const handleCardClick = () => {
     navigate(`/books/${id}`);
@@ -43,6 +53,7 @@ export default function BookCard ({ id, volumeInfo, isSaved, onToggleSave }: Boo
         </Card.Body>
         <Card.Footer pb="5px" pt="5px">
           <Button
+            disabled={!isLogin}
             onClick={(e) => {e.stopPropagation(); onToggleSave?.()}}
             height="4/5"
             backgroundColor={isSaved ? "blue" : "red"}>

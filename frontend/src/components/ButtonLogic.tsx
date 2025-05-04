@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 export const getSavedBooks = async () => {
   try {
-    const res = await fetch("http://localhost:3000/books");
+    const res = await fetch("http://localhost:3000/books", {
+      credentials: "include",
+    });
     const data = await res.json();
     return Array.isArray(data) ? data : [];
   } catch (error) {
@@ -12,6 +14,8 @@ export const getSavedBooks = async () => {
 };
 
 export const isBookSaved = (book: any, savedBooks: any[]) => {
+  if (!book)
+    return false;
   return savedBooks.some((b: any) => b.id === book.id); 
 }
 
@@ -40,10 +44,12 @@ export const toggleSaveBook = async (book: any, savedBooks: any[], setSavedBooks
   if (exists) {
       await fetch(`http://localhost:3000/books/${book.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
     } else {
       await fetch(`http://localhost:3000/books`, {
+        credentials: "include",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
