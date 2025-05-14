@@ -5,6 +5,12 @@ import SearchResultPage from './pages/SearchResultPage'
 import BookListPage from './pages/BookListPage'
 import ErrorPage from './pages/ErrorPage'
 import BookDetailPage from './pages/BookDetailPage'
+import UserCreate from './pages/UserCreate'
+import UserLogin from './pages/UserLogin'
+import SuccessUserCreate from './pages/SuccessUserCreate'
+import SuccessUserUpdate from './pages/SuccessUserUpdate'
+import Mypage from './pages/Mypage'
+
 
 function App() {
   return (
@@ -15,6 +21,11 @@ function App() {
         <Route path="/search/result" element={<SearchResultPage />} />
         <Route path="/books/" element={<BookListPage />} />
         <Route path="/books/:id" element={<BookDetailPage/>} />
+        <Route path="/register" element={<UserCreate />} />
+        <Route path="/login" element={<UserLogin />} />
+        <Route path="/success-user-create" element={<SuccessUserCreate />} />
+        <Route path="/success-user-update" element={<SuccessUserUpdate />} />
+        <Route path="/profile" element={<Mypage />} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </>

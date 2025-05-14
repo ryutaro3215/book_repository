@@ -4,19 +4,28 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { getSavedBooks, isBookSaved, toggleSaveBook } from "../components/ButtonLogic";
+import { useAuth } from "../components/AuthContext";
 
 export default function BookDetailPage () {
   const { id } = useParams(); 
   const [book, setBook] = useState<any>(null);
   const [error, setError] = useState(false);
   const [savedBooks, setSavedBooks] = useState<any[]>([]);
+  const [isLogin, setIsLogin] = useState(true);
+  const { user, isLoading } = useAuth();
 
-  // console.log("id: ", id);
+  useEffect(() => {
+    if (!isLoading && !user) {
+      setIsLogin(false);
+    }
+  }, [user, isLoading]);
+
   useEffect(() => {
     setError(false);
     const fetchBook = async () => {
       try {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+        const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`, {
+        });
         const data = await response.json();
         setBook(data);
       } catch (error) {
@@ -34,34 +43,6 @@ export default function BookDetailPage () {
     fetchSavedBooks();
   }, []);
 
-  // const [_, setRenderToggle] = useState(false);
-  // const STORAGE_KEY = "myBookShelf";
-
-  // const getSavedBooks = () => {
-  //   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  // }
-
-  // const isBookSaved = (book: any) => {
-  //   if (!book) return false;
-  //   const saved = getSavedBooks();
-  //   return saved.some((b: any) => b.id === book.id);
-  // }
-
-  // const toggleSaveBook = (book: any) => {
-  //   // console.log("clicked: ", book);
-  //   const savedBooks = getSavedBooks();
-  //   const exists = savedBooks.some((b: any) => b.id === book.id);
-
-  //   let updatedBooks;
-  //   if (exists) {
-  //     updatedBooks = savedBooks.filter((b: any) => b.id !== book.id);
-  //   } else {
-  //     updatedBooks = [...savedBooks, book];
-  //   }
-  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBooks));
-  //   setRenderToggle((prev) => !prev); // Trigger a re-render
-  //   // console.log("updatedBooks: ", updatedBooks);
-  // }
   
   const { title, authors, publisher, description, imageLinks } = book?.volumeInfo || {};
   const thumbnail = imageLinks?.thumbnail || imageLinks?.smallThumbnail;
@@ -101,6 +82,7 @@ export default function BookDetailPage () {
           </Card.Body>
           <Card.Footer pb="5px" pt="5px">
             <Button
+              disabled={!isLogin}
               onClick={(e) => {e.stopPropagation(); toggleSaveBook?.(book, savedBooks, setSavedBooks, setRenderToggle)}}
               height="4/5"
               backgroundColor={isBookSaved(book, savedBooks) ? "blue" : "red"}>
